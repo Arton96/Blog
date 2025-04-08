@@ -3,13 +3,21 @@ package org.springboot.blog.agencyy.service;
 import org.springboot.blog.agencyy.entity.Tag;
 import org.springboot.blog.agencyy.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+@Service
 public class TagServiceImpl implements TagService{
 
-    @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    public TagServiceImpl(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
+    }
+
     @Override
     public List<Tag> getAllTags() {
         return tagRepository.findAll();

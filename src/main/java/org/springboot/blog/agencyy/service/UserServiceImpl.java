@@ -3,13 +3,30 @@ package org.springboot.blog.agencyy.service;
 import org.springboot.blog.agencyy.entity.User;
 import org.springboot.blog.agencyy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+@Service
 public class UserServiceImpl implements UserService{
-    @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;  // Injeksioni i PasswordEncoder
+
+    @Override
+    public User createUser(User user) {
+        // Enkriptojmë password-in para se ta ruajmë në databazë
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
 
     @Override
     public List<User> getAllUsers() {
@@ -21,10 +38,6 @@ public class UserServiceImpl implements UserService{
         return userRepository.findById(id).orElse(null);
     }
 
-    @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
 
     @Override
     public User updateUser(Long id, User userDetails) {
