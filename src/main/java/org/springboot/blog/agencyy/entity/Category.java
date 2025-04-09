@@ -1,10 +1,16 @@
 package org.springboot.blog.agencyy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Category.class)
 @Entity
 @Table(name = "categories")
 public class Category {
@@ -15,8 +21,14 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+@JsonManagedReference
     private List<Post> posts = new ArrayList<>();
+
+    public Category(){
+
+    }
 
     public Category(Long id, String name, List<Post> posts) {
         this.id = id;

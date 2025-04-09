@@ -19,11 +19,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Autowired
-    private PasswordEncoder passwordEncoder;  // Injeksioni i PasswordEncoder
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User createUser(User user) {
-        // Enkriptojmë password-in para se ta ruajmë në databazë
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

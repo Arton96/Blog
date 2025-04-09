@@ -1,6 +1,9 @@
 package org.springboot.blog.agencyy.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -9,6 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Post.class)
 @Entity
 @Table(name = "posts")
 public class Post {
@@ -33,8 +39,11 @@ public class Post {
     @JoinColumn(name = "author_id")
     private User author;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+//    @ManyToOne
+//    @JoinColumn(name = "category_id")
+@ManyToOne
+@JoinColumn(name = "category_id")
+@JsonBackReference
     private Category category;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
@@ -61,6 +70,9 @@ public class Post {
         this.tags = tags;
     }
 
+    public Post(){
+
+    }
 
     public Long getId() {
         return id;

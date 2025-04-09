@@ -1,10 +1,15 @@
 package org.springboot.blog.agencyy.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 
 @Entity
+@Table(name="comments")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Comment.class)
 public class Comment {
 
     @Id
@@ -19,8 +24,9 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String text; // Field for the comment text
-    private String status; // Field for the comment status (e.g., "approved", "pending")
+    @Column(name = "content")
+    private String text;
+    private String status;
 
     // Getters and Setters
     public Long getId() {
@@ -52,7 +58,7 @@ public class Comment {
     }
 
     public void setText(String text) {
-        this.text = text;  // Ensure this method is present
+        this.text = text;
     }
 
     public String getStatus() {

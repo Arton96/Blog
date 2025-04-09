@@ -17,12 +17,10 @@ public class BlogSecurityConfig {
     public UserDetailsService userDetailsService(DataSource dataSource) {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
 
-        // Merr username, password dhe enabled nga tabela users
         jdbcUserDetailsManager.setUsersByUsernameQuery(
                 "SELECT username, password, enabled FROM users WHERE username = ?"
         );
 
-        // Merr rolet e përdoruesit
         jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
                 "SELECT u.username, r.name AS authority " +
                         "FROM users u " +

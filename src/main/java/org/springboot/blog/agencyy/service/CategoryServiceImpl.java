@@ -3,9 +3,11 @@ package org.springboot.blog.agencyy.service;
 import org.springboot.blog.agencyy.entity.Category;
 import org.springboot.blog.agencyy.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CategoryServiceImpl implements CategoryService{
 
 

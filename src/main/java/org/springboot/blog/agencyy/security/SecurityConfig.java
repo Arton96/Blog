@@ -9,9 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class SecurityConfig {
 
-    // Krijon një PasswordEncoder për të enkriptuar fjalëkalimet
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  // Përdorim BCryptPasswordEncoder për enkriptimin
+        return new BCryptPasswordEncoder();
     }
 }

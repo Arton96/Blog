@@ -1,9 +1,14 @@
 package org.springboot.blog.agencyy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 
 @Entity
+@Table(name = "tags")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Tag.class)
 public class Tag {
 
     @Id
@@ -28,6 +33,8 @@ public class Tag {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Tag() {}
 
     public Tag(Long id, String name) {
         this.id = id;
