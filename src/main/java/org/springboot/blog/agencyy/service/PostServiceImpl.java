@@ -1,5 +1,7 @@
 package org.springboot.blog.agencyy.service;
 
+import org.springboot.blog.agencyy.dto.PostRequestDto;
+import org.springboot.blog.agencyy.dto.PostResponseDto;
 import org.springboot.blog.agencyy.entity.Category;
 import org.springboot.blog.agencyy.entity.Post;
 import org.springboot.blog.agencyy.entity.Tag;
@@ -12,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PostServiceImpl implements PostService{
@@ -41,8 +40,26 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Post getPostById(Long id) {
-        return postRepository.findById(id).orElse(null);
+    public PostResponseDto getPostById(Long id) {
+        Post postById= postRepository.findById(id).orElse(null);
+        PostResponseDto pr = new PostResponseDto();
+        if(postById != null){
+
+            pr.setId(postById.getId());
+            pr.setAuthorName(postById.getAuthor().getUsername());
+            pr.setCategory(postById.getCategory().getName());
+            pr.setContent(postById.getContent());
+
+            List<String>tagNames = new ArrayList<>();
+            for(Tag t: postById.getTags()){
+                tagNames.add(t.getName());
+            }
+            pr.setTags(tagNames);
+            pr.setTitle(postById.getTitle());
+            pr.setCreatedAt(postById.getCreatedAt());
+            return pr;
+        }
+        return null;
     }
 
     @Override
@@ -61,25 +78,24 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Post createPost(Post post) {
+    public PostResponseDto createPost(PostRequestDto postRequestDto) {
 
-        User author = userRepository.findById(post.getAuthor().getId())
+        User author = userRepository.findById(postRequestDto.getAuthorId())
                 .orElseThrow(() -> new RuntimeException("Author not found"));
 
-        Category category = categoryRepository.findById(post.getCategory().getId())
+        Category category = categoryRepository.findById(postRequestDto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         Set<Tag> tagsFromDb = new HashSet<>();
-        for (Tag tag : post.getTags()) {
-            Tag tagFromDb = tagRepository.findById(tag.getId())
-                    .orElseThrow(() -> new RuntimeException("Tag not found with ID: " + tag.getId()));
+        for (Long tagId : postRequestDto.getTagIds()) {
+            Tag tagFromDb = tagRepository.findById(tagId)
+                    .orElseThrow(() -> new RuntimeException("Tag not found with ID: " + tagId));
             tagsFromDb.add(tagFromDb);
         }
 
-        // Krijo post-in e ri
         Post p = new Post();
-        p.setTitle(post.getTitle());
-        p.setContent(post.getContent());
+        p.setTitle(postRequestDto.getTitle());
+        p.setContent(postRequestDto.getContent());
         p.setCreatedAt(LocalDateTime.now());
         p.setUpdatedAt(LocalDateTime.now());
         p.setAuthor(author);
@@ -87,7 +103,23 @@ public class PostServiceImpl implements PostService{
         p.setTags(tagsFromDb);
         p.setComments(new ArrayList<>());
 
-        return postRepository.save(p);
+        Post createdPost = postRepository.save(p);
+
+        PostResponseDto pr = new PostResponseDto();
+        pr.setId(createdPost.getId());
+        pr.setAuthorName(createdPost.getAuthor().getUsername());
+        pr.setCategory(createdPost.getCategory().getName());
+        pr.setContent(createdPost.getContent());
+
+        List<String>tagNames = new ArrayList<>();
+        for(Tag t: createdPost.getTags()){
+            tagNames.add(t.getName());
+        }
+        pr.setTags(tagNames);
+        pr.setTitle(createdPost.getTitle());
+        pr.setCreatedAt(createdPost.getCreatedAt());
+        return pr;
+
     }
 
 
@@ -112,15 +144,19 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Post updatePost(Long id, Post postDetails) {
-        Post post = getPostById(id);
-        if (post != null) {
-            post.setTitle(postDetails.getTitle());
-            post.setContent(postDetails.getContent());
-            post.setCategory(postDetails.getCategory());
-            post.setTags(postDetails.getTags());
-            return postRepository.save(post);
+       Optional<Post> post = this.postRepository.findById(id);
+        if (post.isPresent()) {
+            post.get().setTitle(postDetails.getTitle());
+            post.get().setContent(postDetails.getContent());
+            post.get().setCategory(postDetails.getCategory());
+            post.get().setTags(postDetails.getTags());
+            return postRepository.save(post.get());
         }
-        return null;    }
+        return null;
+
+
+
+    }
 
     @Override
     public void deletePost(Long id) {

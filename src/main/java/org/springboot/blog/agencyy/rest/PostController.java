@@ -1,5 +1,7 @@
 package org.springboot.blog.agencyy.rest;
 
+import org.springboot.blog.agencyy.dto.PostRequestDto;
+import org.springboot.blog.agencyy.dto.PostResponseDto;
 import org.springboot.blog.agencyy.entity.Post;
 import org.springboot.blog.agencyy.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +29,8 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
-        Post post = postService.getPostById(id);
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long id) {
+        PostResponseDto post = postService.getPostById(id);
         return post != null ? ResponseEntity.ok(post) : ResponseEntity.notFound().build();
     }
 
@@ -48,8 +50,8 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        Post createdPost = postService.createPost(post);
+    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto postRequestDto) {
+        PostResponseDto createdPost = postService.createPost(postRequestDto);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
 
