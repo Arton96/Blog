@@ -2,17 +2,17 @@ package org.springboot.blog.agencyy.service;
 
 import org.springboot.blog.agencyy.dto.PostRequestDto;
 import org.springboot.blog.agencyy.dto.PostResponseDto;
-import org.springboot.blog.agencyy.entity.Post;
 
 import java.util.List;
 
 public interface PostService {
-    List<Post> getAllPosts();
+    List<PostResponseDto> getAllPosts();
     PostResponseDto getPostById(Long id);
-    List<Post> getPostsByCategory(Long categoryId);
-    List<Post> getPostsByAuthor(Long authorId);
-    List<Post> getPostsByTag(String tagName);
     PostResponseDto createPost(PostRequestDto postRequestDto);
-    Post updatePost(Long id, Post postDetails);
+    PostResponseDto updatePost(Long id, PostRequestDto postDetails);
     void deletePost(Long id);
+    List<PostResponseDto> getPostsByCategory(Long categoryId);
+    List<PostResponseDto> getPostsByAuthorId(Long authorId);
+    List<PostResponseDto> getPostsByTagName(String tagName);
+
 }

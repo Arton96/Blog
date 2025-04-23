@@ -2,7 +2,6 @@ package org.springboot.blog.agencyy.rest;
 
 import org.springboot.blog.agencyy.dto.PostRequestDto;
 import org.springboot.blog.agencyy.dto.PostResponseDto;
-import org.springboot.blog.agencyy.entity.Post;
 import org.springboot.blog.agencyy.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,7 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> getAllPosts() {
+    public List<PostResponseDto> getAllPosts() {
         return postService.getAllPosts();
     }
 
@@ -35,18 +34,18 @@ public class PostController {
     }
 
     @GetMapping("/category/{categoryId}")
-    public List<Post> getPostsByCategory(@PathVariable Long categoryId) {
+    public List<PostResponseDto> getPostsByCategory(@PathVariable Long categoryId) {
         return postService.getPostsByCategory(categoryId);
     }
 
     @GetMapping("/author/{authorId}")
-    public List<Post> getPostsByAuthor(@PathVariable Long authorId) {
-        return postService.getPostsByAuthor(authorId);
+    public List<PostResponseDto> getPostsByAuthor(@PathVariable Long authorId) {
+        return postService.getPostsByAuthorId(authorId);
     }
 
     @GetMapping("/tag/{tagName}")
-    public List<Post> getPostsByTag(@PathVariable String tagName) {
-        return postService.getPostsByTag(tagName);
+    public List<PostResponseDto> getPostsByTag(@PathVariable String tagName) {
+        return postService.getPostsByTagName(tagName);
     }
 
     @PostMapping
@@ -56,8 +55,8 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post postDetails) {
-        Post updatedPost = postService.updatePost(id, postDetails);
+    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) {
+        PostResponseDto updatedPost = postService.updatePost(id, postRequestDto);
         return updatedPost != null ? ResponseEntity.ok(updatedPost) : ResponseEntity.notFound().build();
     }
 

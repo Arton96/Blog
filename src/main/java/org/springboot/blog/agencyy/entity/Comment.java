@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name="comments")
@@ -25,8 +27,16 @@ public class Comment {
     private User user;
 
     @Column(name = "content")
-    private String text;
+    private String content;
     private String status;
+
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     // Getters and Setters
     public Long getId() {
@@ -54,11 +64,11 @@ public class Comment {
     }
 
     public String getText() {
-        return text;
+        return content;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getStatus() {
@@ -69,13 +79,29 @@ public class Comment {
         this.status = status;
     }
 
-    public Comment(Long id, Post post, User user, String text, String status) {
+    public String getContent() {
+        return content;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Comment(){
+
+    }
+
+    public Comment(Long id, Post post, User user, String content, String status, LocalDateTime createdAt) {
         this.id = id;
         this.post = post;
         this.user = user;
-        this.text = text;
+        this.content = content;
         this.status = status;
+        this.createdAt = createdAt;
     }
-
 }
 

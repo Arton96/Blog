@@ -1,23 +1,25 @@
 package org.springboot.blog.agencyy.service;
 
 
+import org.springboot.blog.agencyy.dto.CommentRequestDto;
+import org.springboot.blog.agencyy.dto.CommentResponseDto;
 import org.springboot.blog.agencyy.entity.Comment;
 
 import java.util.List;
 
 public interface CommentService {
 
-    List<Comment> getAllComments();
+    List<CommentResponseDto> getAllComments();
 
-    List<Comment> getCommentsByPost(Long postId);
+    List<CommentResponseDto> getCommentsByPost(Long postId);
 
-    List<Comment> getCommentsByUser(Long userId);
+    List<CommentResponseDto> getCommentsByUser(Long userId);
 
-    List<Comment> getCommentsByStatus(String status);
+    List<CommentResponseDto> getCommentsByStatus(String status);
 
-    Comment createComment(Comment comment);
+    CommentResponseDto createComment(CommentRequestDto commentRequestDto);
 
-    Comment updateComment(Long id, Comment commentDetails);
+    CommentResponseDto updateComment(Long id, CommentRequestDto commentRequestDto);
 
     void deleteComment(Long id);
 }
